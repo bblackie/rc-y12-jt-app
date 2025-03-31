@@ -19,18 +19,17 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
-@app.route("/")
-def home():
-    return render_template("home.html")
 
-@app.route("/cars")
+@app.route("/")
 def index():
     cursor = get_db().cursor()
     sql = '''
-SELECT manufacturer, model, year, kms, price, type FROM cars
+SELECT Manufacturer.name, model, year, kms, price, type FROM cars
 JOIN Transmission
 ON Cars.transmission = Transmission.id
-ORDER BY manufacturer, model
+JOIN Manufacturer
+ON Cars.manufacturer_id = Manufacturer.id
+ORDER BY Manufacturer.name, model
 '''
     cursor.execute(sql)
     results = cursor.fetchall()
